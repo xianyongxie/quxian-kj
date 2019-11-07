@@ -91,7 +91,7 @@ public class KuaJingPayServiceImpl implements KuaJingPayService {
     }
 
     @Override
-    public Map orderPay(Map<String, Object> params) {
+    public String orderPay(Map<String, Object> params) {
         String version = "10";
         String reqType = "OrderPay";
         String reqDate = DateUtil.getDate();
@@ -100,14 +100,14 @@ public class KuaJingPayServiceImpl implements KuaJingPayService {
         String ordAmt;
         String gateId = "ebth5pay";
         String merPriv = ""; //商户私有域，有值时参与验签 可空
-        String retUrl = "";
-        String bgRetUrl = "";
+        String retUrl = "aaa";
+        String bgRetUrl = "bbb";
         String prepayId = "";//交易卡信息 可空
-        String currencyCode = "USD";//币种（商品获取接口返回）
+        String currencyCode = "GBP";//币种（商品获取接口返回）
         String pcs = "1";
-        String exchangeRate = "9.1113";//交易汇率（汇率获取接口返回）
-        String foreignAmt = "3.00";//外币金额
-        String goodsNo = "GA19083003628988";//商品编号
+        String exchangeRate = "9.0409";//交易汇率（汇率获取接口返回）
+        String foreignAmt = "2.00";//外币金额
+        String goodsNo = "GA19090903629116";//商品编号
         ordAmt = new BigDecimal(foreignAmt).multiply(new BigDecimal(exchangeRate)).setScale(2,BigDecimal.ROUND_UP).toString();
         System.out.println("订单ID：" + ordId + "，订单金额：" + ordAmt);
         //签名参数组装
@@ -139,8 +139,8 @@ public class KuaJingPayServiceImpl implements KuaJingPayService {
         body.add("chkValue",chkValue);
 
         //发送Post数据并返回数据
-        Map map = RequestUtil.sendPostRequest(orderPayUrl, body);
-        return map;
+        String content = RequestUtil.sendPostRequestStr(orderPayUrl, body);
+        return content;
     }
 
     /**

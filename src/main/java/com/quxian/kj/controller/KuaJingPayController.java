@@ -71,7 +71,7 @@ public class KuaJingPayController {
      * @return
      */
     @RequestMapping("/orderPay")
-    public Map<String,Object> orderPay(HttpServletRequest request){
+    public String orderPay(HttpServletRequest request){
         Map<String,Object> resultMap = new HashMap<String, Object>();
 
         String currercyCode = request.getParameter("currercyCode");  //币种（商品获取接口返回）
@@ -85,16 +85,9 @@ public class KuaJingPayController {
         params.put("foreignAmt",foreignAmt);
         params.put("goodsNo",goodsNo);
 
-        Map map = kuaJingPayService.orderPay(params);
-        if (map.get("resultCode").equals("000000")){
-            List<Map<String,Object>> goodsList = (List<Map<String, Object>>) ((Map)map.get("list")).get("item");
-            resultMap.put("code","1");
-            resultMap.put("data",goodsList);
-        }else{
-            resultMap.put("code",0);
-            resultMap.put("resultMsg",map.get("resultMsg"));
-        }
-        return resultMap;
+        String content = kuaJingPayService.orderPay(params);
+
+        return content;
     }
 
     /**

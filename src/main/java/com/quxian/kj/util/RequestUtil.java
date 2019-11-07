@@ -45,6 +45,27 @@ public class RequestUtil {
     }
 
     /**
+     * 向目的URL发送post请求
+     * @param url       目的url
+     * @param params    发送的参数
+     */
+    public static String sendPostRequestStr(String url, MultiValueMap<String, String> params){
+        RestTemplate restTemplate = restTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        HttpMethod method = HttpMethod.POST;
+        // 以表单的方式提交
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        //将请求头部和参数合成一个请求
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
+
+        String response = restTemplate.postForObject(url,requestEntity,String.class);
+        System.out.println("请求返回结果：" + response);
+
+        return response;
+    }
+
+    /**
      * 支付回调
      * 请求参数转map
      * @param request

@@ -9,7 +9,7 @@ public interface KuaJingPayService {
 
     Map getRate();
 
-    Map orderPay(Map<String, Object> params);
+    String orderPay(Map<String, Object> params);
 
     Map getOrderDetail(String ordId);
 }
