@@ -72,8 +72,56 @@ public class KuaJingPayController {
      */
     @RequestMapping("/orderPay")
     public Map<String,Object> orderPay(HttpServletRequest request){
-        String ordAmt = request.getParameter("ordAmt");  //交易金额
+        Map<String,Object> resultMap = new HashMap<String, Object>();
+
+        String currercyCode = request.getParameter("currercyCode");  //币种（商品获取接口返回）
+        String exchangeRate = request.getParameter("exchangeRate");  //交易汇率（汇率获取接口返回）
+        String foreignAmt = request.getParameter("foreignAmt");  //外币金额
+        String goodsNo = request.getParameter("goodsNo");  //商品编号
+
+        Map<String,Object> params = new HashMap<String, Object>();
+        params.put("currercyCode",currercyCode);
+        params.put("exchangeRate",exchangeRate);
+        params.put("foreignAmt",foreignAmt);
+        params.put("goodsNo",goodsNo);
+
+        Map map = kuaJingPayService.orderPay(params);
+        if (map.get("resultCode").equals("000000")){
+            List<Map<String,Object>> goodsList = (List<Map<String, Object>>) ((Map)map.get("list")).get("item");
+            resultMap.put("code","1");
+            resultMap.put("data",goodsList);
+        }else{
+            resultMap.put("code",0);
+            resultMap.put("resultMsg",map.get("resultMsg"));
+        }
+        return resultMap;
+    }
+
+    /**
+     * H5 交易预下单
+     * @return
+     */
+    @RequestMapping("/callBack")
+    public Map<String,Object> callBack(HttpServletRequest request){
+        // 检查支付结果是否正确
+        HashMap<String, String> params = RequestUtil.verifyParameters(request);
         return null;
     }
 
+    /**
+     * H5 交易查询接口
+     * @return
+     */
+    @RequestMapping("/getOrderDetail")
+    public Map<String,Object> getOrderDetail(HttpServletRequest request){
+        Map<String,Object> resultMap = new HashMap<String, Object>();
+
+        String ordId = request.getParameter("ordId"); //商户订单号
+
+        Map map = kuaJingPayService.getOrderDetail(ordId);
+        resultMap.put("code",map.get("resultCode"));
+        resultMap.put("resultMsg",map.get("resultMsg"));
+
+        return resultMap;
+    }
 }
